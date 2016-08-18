@@ -12,8 +12,14 @@
 */
 
 Route::auth();
+
 Route::group(['middleware' => 'web'], function () {
-    Route::group(['prefix' => 'admin'], function () {
+    Route::get('/', [
+        'as' => '/',
+        'uses' => 'HomeController@index',
+    ]);
+
+    Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
         Route::resource('teams', 'Admin\TeamController');
     });
 });
