@@ -6,4 +6,5 @@ return [
     'delete_error' => 'Delete error',
     'update_error' => 'Update error',
     'data_empty' => 'Data is empty',
+    'team_create_success' => 'Team create success',
 ];

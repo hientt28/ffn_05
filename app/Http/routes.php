@@ -11,6 +11,9 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+Route::auth();
+Route::group(['middleware' => 'web'], function () {
+    Route::group(['prefix' => 'admin'], function () {
+        Route::resource('teams', 'Admin\TeamController');
+    });
 });
