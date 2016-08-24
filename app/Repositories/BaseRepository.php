@@ -163,5 +163,4 @@ abstract class BaseRepository implements BaseRepositoryInterface
 
         return $model->save();
     }
-
 }

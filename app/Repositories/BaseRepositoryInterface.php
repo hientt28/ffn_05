@@ -30,6 +30,5 @@ interface BaseRepositoryInterface
 
     public function orderBy($column, $direction = 'asc');
 
-    public function save(array $data, $exist_field = 'id')
-
+    public function save(array $data, $exist_field = 'id');
 }
