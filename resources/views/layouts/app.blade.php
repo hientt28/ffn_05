@@ -65,7 +65,20 @@
                         <a class="item" href="{{ url('/logout') }}" class="ui inverted button"><i
                                     class="sign out icon"></i>&nbsp; {{ trans('login.logout') }}</a>
                         <a class="item" href="#"><i class="user icon"></i>&nbsp;{{ trans('app.profile') }}</a>
-                        <a class="item" href="#"><i class="flag outline icon"></i>&nbsp;{{ trans('app.languages') }}</a>
+                        <div class="ui right pointing dropdown link item">
+                            <i class="dropdown icon"></i>
+                            {{ trans('common.language') }}
+                            <div class="menu">
+                                <div class="item"><a href=" {{ route('lang', 'en') }} ">
+                                    <i class="us flag"></i>
+                                    {{ trans('common.english') }}</a>
+                                </div>
+                                <div class="item"><a href="{{ route('lang', 'vi') }}">
+                                    <i class="vietnam flag"></i>
+                                    {{ trans('common.vietnamese') }}</a>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             @endif

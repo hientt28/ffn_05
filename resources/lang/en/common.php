@@ -7,4 +7,7 @@ return [
     'create' => 'Create',
     'create_new' => 'Create new',
     'choose' => 'Choose a data',
+    'english' => 'English',
+    'vietnamese' => 'Vietnameses',
+    'language' => 'Language',
 ];
