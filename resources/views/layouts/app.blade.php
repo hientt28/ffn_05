@@ -14,23 +14,29 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/css/bootstrap.min.css">
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link href="{{ asset('css/semantic.min.css') }}" rel="stylesheet">
-    <link href="{{ asset('css/jqx.base.css') }}" rel="stylesheet">
-    <link href="{{ asset('css/jqx.ui-redmond.css') }}" rel="stylesheet">
-
 </head>
+@if(!Auth::guest())
+    <style>
+        #app-layout {
+            overflow: hidden;
+        }
+    </style>
+@endif
 <body id="app-layout">
 <div class="ui fixed inverted menu">
     <div class="ui container">
-        <a class="launch icon item" onclick="(function () {
+        <a class="item"
+           onclick="(function () {
                 $('.ui.sidebar').sidebar('toggle');
             })()">
-            <i class="content icon"></i>
-            <!-- {{ trans('app.menu') }} -->
+            {{ trans('app.menu') }}
         </a>
         <a href="#" class="header item ct-header">
             {{ trans('app.app_name') }}
         </a>
+        <a href="{{ url('/home') }}" class="item"><i class="home icon"></i>&nbsp;{{ trans('app.home') }}</a>
         @if(!Auth::guest())
+            <a href="{{ url('/home') }}" class="item"><i class="newspaper icon"></i>&nbsp;{{ trans('app.new') }}</a>
             <div class="ui search item">
                 <div class="ui icon input">
                     <input class="prompt" type="text" placeholder="Search...">
@@ -39,29 +45,30 @@
                 <div class="results"></div>
             </div>
         @endif
-        <div class="right menu">
-            <a href="#" class="item"><i class="home icon"></i>&nbsp;{{ trans('app.home') }}</a>
+        <div class="right item">
             @if(Auth::guest())
                 <a class="item" href="{{ url('/login') }}" class="ui inverted button"><i class="sign in icon"></i>&nbsp;
                     {{ trans('login.login') }}
                 </a>
             @else
                 @can('is_admin', Auth::user())
-                <a href="{{ route('admin.welcome') }}" class="item"><i class="newspaper icon"></i>&nbsp;{{ trans('app.new') }}</a>
+                    <a href="{{ route('admin.welcome') }}" class="item"><i
+                                class="newspaper icon"></i>&nbsp;{{ trans('app.new') }}</a>
                 @else
-                    <a href="{{ route('users.news.index') }}" class="item"><i class="newspaper icon"></i>&nbsp;{{ trans('app.new') }}</a>
-                    @endcan
+                    <a href="{{ route('users.news.index') }}" class="item"><i
+                                class="newspaper icon"></i>&nbsp;{{ trans('app.new') }}</a>
+                @endcan
 
-                    <div class="ui simple dropdown item">
-                        {{ Auth::user()->name }} <i class="dropdown icon"></i>
-                        <div class="menu">
-                            <a class="item" href="{{ url('/logout') }}" class="ui inverted button"><i
-                                        class="sign out icon"></i>&nbsp; {{ trans('login.logout') }}</a>
-                            <a class="item" href="#"><i class="user icon"></i>&nbsp;{{ trans('app.profile') }}</a>
-                            <a class="item" href="#"><i class="flag outline icon"></i>&nbsp;{{ trans('app.languages') }}</a>
-                        </div>
+                <div class="ui simple dropdown item">
+                    {{ Auth::user()->name }} <i class="dropdown icon"></i>
+                    <div class="menu">
+                        <a class="item" href="{{ url('/logout') }}" class="ui inverted button"><i
+                                    class="sign out icon"></i>&nbsp; {{ trans('login.logout') }}</a>
+                        <a class="item" href="#"><i class="user icon"></i>&nbsp;{{ trans('app.profile') }}</a>
+                        <a class="item" href="#"><i class="flag outline icon"></i>&nbsp;{{ trans('app.languages') }}</a>
                     </div>
-                @endif
+                </div>
+            @endif
         </div>
     </div>
 
@@ -75,20 +82,46 @@
             {{ trans('app.team') }}
         </a>
         @can('is_admin', Auth::user())
-        <a class="item">
-            <i class="soccer icon"></i>&nbsp;
-            {{ trans('app.match') }}
-        </a>
+            <a class="item">
+                <i class="soccer icon"></i>&nbsp;
+                {{ trans('app.match') }}
+            </a>
         @else
             <a class="item" href="{{ route('users.matches.index') }}">
                 <i class="soccer icon"></i>&nbsp;
                 {{ trans('app.match') }}
             </a>
-            @endcan
+        @endcan
+        @if(!Auth::guest())
+            <div class="ui simple dropdown item">
+                {{ Auth::user()->name }} <i class="dropdown icon"></i>
+                <div class="menu">
+                    <a class="item" href="{{ url('/logout') }}" class="ui inverted button">
+                        <i class="sign out icon"></i>&nbsp; {{ trans('login.logout') }}
+                    </a>
+                    <a class="item" href="#"><i class="user icon"></i>&nbsp;{{ trans('app.profile') }}</a>
+                    <a class="item" href="#"><i class="flag outline icon"></i>&nbsp;{{ trans('app.languages') }}</a>
+                </div>
+            </div>
+        @endif
+    </div>
+</div>
 
+<div class="ui sidebar inverted vertical menu">
+    <div class="divider">
+        <a class="item">
+            <i class="flag icon"></i>&nbsp;{{ trans('app.league') }}
+        </a>
+        <a class="item">
+            <i class="linux icon"></i>&nbsp;{{ trans('app.team') }}
+        </a>
+        <a class="item">
+            <i class="soccer icon"></i>&nbsp;{{ trans('app.match') }}
+        </a>
     </div>
-    <div class="pusher">
-    </div>
+</div>
+<div class="pusher">
+</div>
 
 </div>
 @yield('content')
@@ -99,12 +132,13 @@
                 <div class="three wide column">
                     <h4 class="ui inverted header">Company</h4>
                     <div class="ui inverted link list">
-                        <a class="item" href="https://github.com/Semantic-Org/Semantic-UI" target="_blank">Framgia</a>
+                        <a class="item" href="https://github.com/Semantic-Org/Semantic-UI"
+                           target="_blank">{{ trans('app.company') }}</a>
                     </div>
                 </div>
                 <div class="seven wide right floated column">
-                    <h4 class="ui inverted teal header">Football News System</h4>
-                    <p> This is a football news page tell about news,transfer,result matches,v.v...</p>
+                    <h4 class="ui inverted teal header">{{ trans('app.app_name') }}</h4>
+                    <p> {{ trans('app.describe') }} </p>
                 </div>
             </div>
         </div>

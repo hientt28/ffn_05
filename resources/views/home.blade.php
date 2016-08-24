@@ -5,10 +5,10 @@
         <div class="row">
             <div class="col-md-10 col-md-offset-1">
                 <div class="panel panel-default">
-                    <div class="panel-heading">{{ trans('common.welcome') }}</div>
+                    <div class="panel-heading">{{ trans('common.dashboard')) }}</div>
 
                     <div class="panel-body">
-                        {{ trans('common.landing_page') }}
+                        {{ trans('login.authenticated')) }}
                     </div>
                 </div>
             </div>
