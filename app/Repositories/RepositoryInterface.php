@@ -2,7 +2,7 @@
 
 namespace App\Repositories;
 
-interface BaseRepositoryInterface
+interface RepositoryInterface
 {
     public function count();
 

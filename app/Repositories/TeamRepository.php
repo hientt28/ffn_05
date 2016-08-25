@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Repositories\Team;
+namespace App\Repositories;
 
 use App\Models\Team;
-use App\Repositories\BaseRepository;
+use App\Repositories\EloquentRepository;
 
-class TeamRepository extends BaseRepository
+class TeamRepository extends EloquentRepository
 {
     public function __construct(Team $team)
     {

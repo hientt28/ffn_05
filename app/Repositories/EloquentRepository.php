@@ -8,7 +8,7 @@ namespace App\Repositories;
 use Exception;
 use DB;
 
-abstract class BaseRepository implements BaseRepositoryInterface
+abstract class EloquentRepository implements RepositoryInterface
 {
     protected $model;
     protected $where = [];
@@ -24,29 +24,37 @@ abstract class BaseRepository implements BaseRepositoryInterface
         $this->model = $model;
     }
 
+    private function newQuery()
+    {
+        $this->model = $this->model->newQuery();
+
+        return $this;
+    }
+
     public function count()
     {
-        return $this->loadWhere()->count();
+        $this->newQuery()->loadWhere();
+
+        return $this->model->count();
     }
 
     public function all()
     {
-        return $this->loadWhere()->orderBys()->all();
+        $this->newQuery()->loadWhere()->orderBys();
+
+        return $this->model->get();
     }
 
     function loadWhere()
     {
-        foreach ($this->where as $where)
-        {
-            $this->model->where($where);
+        foreach ($this->where as $where) {
+            $this->model->where($where[0], $where[1], $where[2]);
         }
-        foreach ($this->orWhere as $where)
-        {
-            $this->model->orWhere($where);
+        foreach ($this->orWhere as $where) {
+            $this->model->orWhere($where[0], $where[1], $where[2]);
         }
-        foreach ($this->inWhere as $where)
-        {
-            $this->model->inWhere($where);
+        foreach ($this->whereIn as $where) {
+            $this->model->whereIn($where);
         }
 
         return $this;
@@ -54,12 +62,18 @@ abstract class BaseRepository implements BaseRepositoryInterface
 
     function orderBys()
     {
-        foreach($this->orderBy as $orders)
-        {
+        foreach ($this->orderBy as $orders) {
             $this->model->orderBy($orders['column'], $orders['direction']);
         }
 
         return $this;
+    }
+
+    public function deleteAll()
+    {
+        $this->newQuery()->loadWhere();
+
+        return $this->model->delete();
     }
 
     public function find($id)
@@ -79,7 +93,9 @@ abstract class BaseRepository implements BaseRepositoryInterface
 
     public function paginate($limit)
     {
-        return $this->loadWhere()->orderBys()->paginate($limit);
+        $this->newQuery()->loadWhere()->orderBys();
+
+        return $this->model->paginate($limit);
     }
 
     public function create($inputs)
@@ -122,12 +138,18 @@ abstract class BaseRepository implements BaseRepositoryInterface
 
     public function lists($column, $key = null)
     {
-        return $this->loadWhere()->orderBys()->lists($column, $key);
+        $this->newQuery()->loadWhere()->orderBys();
+
+        return $this->model->lists($column, $key);
     }
 
-    public function where($column, $value = null, $operator = null)
+    public function where($conditions, $operator = null, $value = null)
     {
-        $this->where[] = compact('column', 'value', 'operator');
+        if (func_get_args() == 2) {
+            list($value, $operator) = [$operator, '='];
+        }
+
+        $this->where[] = [$conditions, $operator, $value];
 
         return $this;
     }
@@ -140,9 +162,13 @@ abstract class BaseRepository implements BaseRepositoryInterface
         return $this;
     }
 
-    public function orWhere($column, $operator = null, $value = null)
+    public function orWhere($conditions, $operator = null, $value = null)
     {
-        $this->orWhere[] = compact('column', 'value', 'operator');
+        if (func_get_args() == 2) {
+            list($value, $operator) = [$operator, '='];
+        }
+
+        $this->where[] = [$conditions, $operator, $value];
 
         return $this;
     }
