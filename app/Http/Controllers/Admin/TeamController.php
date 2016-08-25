@@ -4,8 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
-use App\Repositories\Country\CountryRepository;
-use App\Repositories\Team\TeamRepository;
+use App\Repositories\CountryRepository;
+use App\Repositories\TeamRepository;
 use App\Http\Requests\TeamRequest;
 use App\Services\FileUpload;
 
@@ -14,6 +14,7 @@ class TeamController extends Controller
     use FileUpload;
     private $teamRepository;
     private $countryRepository;
+
     public function __construct(TeamRepository $teamRepository, CountryRepository $countryRepository)
     {
         $this->teamRepository = $teamRepository;
@@ -131,7 +132,7 @@ class TeamController extends Controller
                 ->withErrors(['message' => trans('team.update_error')]);
         }
 
-        return redirect()->route('admin.teams.index')->withSuccess(trans('message.team_create_success'));
+        return redirect()->route('admin.teams.index')->withSuccess(trans('message.team_update_success'));
     }
 
     /**

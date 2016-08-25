@@ -21,5 +21,6 @@ Route::group(['middleware' => 'web'], function () {
 
     Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
         Route::resource('teams', 'Admin\TeamController');
+        Route::resource('players', 'Admin\PlayerController');
     });
 });

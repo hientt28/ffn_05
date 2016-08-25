@@ -9,4 +9,5 @@ return [
     'league' => 'League',
     'team' => 'Team',
     'match' => 'Match',
+    'player' => 'Player',
 ];
