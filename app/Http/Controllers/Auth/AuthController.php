@@ -7,6 +7,10 @@ use Validator;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
 use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
+use Illuminate\Http\Request;
+use App\Repositories\UserRepository;
+use App\Http\Requests\RegisterRequest;
+use Exception;
 
 class AuthController extends Controller
 {
@@ -30,15 +34,17 @@ class AuthController extends Controller
      */
     protected $redirectTo = '/';
     protected $redirectAfterLogout = '/login';
+    protected $userRepository;
 
     /**
      * Create a new authentication controller instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(UserRepository $userRepository)
     {
         $this->middleware($this->guestMiddleware(), ['except' => 'logout']);
+        $this->userRepository = $userRepository;
     }
 
     /**
@@ -80,5 +86,67 @@ class AuthController extends Controller
         }
 
         return $this->redirectTo;
+    }
+    //Register handle
+    public function register(RegisterRequest $request)
+    {
+        $confirmationCode = str_random(config('common.user.confirmation_code.length'));
+
+        try {
+            $user = $this->userRepository->createUser($request, $confirmationCode);
+        } catch (Exception $e) {
+            return redirect('/')->withError($e->getMessage());
+        }
+
+        return redirect()->back()->withErrors(trans('message.register_active'));
+    }
+
+    //Active for user
+    public function confirm($confirmationCode)
+    {
+        try {
+            $user = $this->userRepository->updateConfirm($confirmationCode);
+            auth()->login($user);
+        } catch (Exception $e) {
+            return redirect('/')->withError($e->getMessage());
+        }
+
+        return redirect('/');
+    }
+
+
+    //Login user handle
+    public function login(Request $request)
+    {
+        $this->validateLogin($request);
+
+        // If the class is using the ThrottlesLogins trait, we can automatically throttle
+        // the login attempts for this application. We'll key this by the username and
+        // the IP address of the client making these requests into this application.
+        $throttles = $this->isUsingThrottlesLoginsTrait();
+
+        if ($throttles && $lockedOut = $this->hasTooManyLoginAttempts($request)) {
+            $this->fireLockoutEvent($request);
+
+            return $this->sendLockoutResponse($request);
+        }
+
+        $credentials = $this->getCredentials($request);
+        $credentials['confirmed'] = 1;
+
+        if (auth()->guard($this->getGuard())->attempt($credentials, $request->has('remember'))) {
+            return $this->handleUserWasAuthenticated($request, $throttles);
+        }else {
+            return redirect()->back();
+        }
+
+        // If the login attempt was unsuccessful we will increment the number of attempts
+        // to login and redirect the user back to the login form. Of course, when this
+        // user surpasses their maximum number of attempts they will get locked out.
+        if ($throttles && ! $lockedOut) {
+            $this->incrementLoginAttempts($request);
+        }
+
+        return $this->sendFailedLoginResponse($request);
     }
 }

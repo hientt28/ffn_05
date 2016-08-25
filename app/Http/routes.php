@@ -1,5 +1,4 @@
 <?php
-
 /*
 |--------------------------------------------------------------------------
 | Application Routes
@@ -23,4 +22,10 @@ Route::group(['middleware' => 'web'], function () {
         Route::resource('teams', 'Admin\TeamController');
         Route::resource('players', 'Admin\PlayerController');
     });
+
+    Route::get('register/verify/{confirmation_code}', [
+        'as' => 'user.active',
+        'uses' => 'Auth\AuthController@confirm'
+    ]);
+
 });
