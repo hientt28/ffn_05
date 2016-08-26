@@ -77,10 +77,6 @@
             <i class="flag icon"></i>&nbsp;
             {{ trans('app.league') }}
         </a>
-        <a class="item" href="{{ route('admin.teams.index') }}">
-            <i class="linux icon"></i>&nbsp;
-            {{ trans('app.team') }}
-        </a>
         @can('is_admin', Auth::user())
             <a class="item">
                 <i class="soccer icon"></i>&nbsp;
@@ -90,6 +86,14 @@
             <a class="item" href="{{ route('users.matches.index') }}">
                 <i class="soccer icon"></i>&nbsp;
                 {{ trans('app.match') }}
+            </a>
+            <a class="item" href="{{ route('admin.teams.index') }}">
+                <i class="linux icon"></i>&nbsp;
+                {{ trans('app.team') }}
+            </a>
+            <a class="item" href="{{ route('admin.players.index') }}">
+                <i class="linux icon"></i>&nbsp;
+                {{ trans('app.player') }}
             </a>
         @endcan
         @if(!Auth::guest())

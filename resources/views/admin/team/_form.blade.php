@@ -15,5 +15,5 @@
 
 <div class="form-group, col-md-11">
     {!! Form::label('country_id', trans('team.country'), ['class' => 'control-label']) !!}
-    {!! Form::select('country_id', $countries, null, ['class' => 'form-control', 'autofocus', 'placeholder' => trans('team.choose')]) !!}
+    {!! Form::select('country_id', $countries, null, ['class' => 'form-control', 'autofocus', 'placeholder' => trans('common.choose')]) !!}
 </div>
