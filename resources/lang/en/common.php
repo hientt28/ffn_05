@@ -7,4 +7,5 @@ return [
     'create' => 'Create',
     'create_new' => 'Create new',
     'choose' => 'Choose a data',
+    'confirm_register' => 'confirm_register',
 ];
