@@ -59,4 +59,9 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Match::class);
     }
+
+    public function avatarImage()
+    {
+        return $this->attributes['avatar'] ?: asset('images\man.png');
+    }
 }

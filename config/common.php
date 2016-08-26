@@ -8,4 +8,5 @@ return [
             'length' => 10,
         ],
     ],
+    'path_cloud_avatar' => 'football/avatar/',
 ];

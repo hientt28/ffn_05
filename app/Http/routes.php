@@ -21,6 +21,23 @@ Route::group(['middleware' => 'web'], function () {
     Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
         Route::resource('teams', 'Admin\TeamController');
         Route::resource('players', 'Admin\PlayerController');
+        Route::resource('profile', 'Admin\UserController', [
+            'only' => [
+                'index',
+                'edit',
+                'update'
+            ]
+        ]);
+    });
+
+    Route::group(['prefix' => 'users', 'namespace' => 'User'], function () {
+        Route::resource('profile', 'UserController', [
+            'only' => [
+                'index',
+                'edit',
+                'update'
+            ]
+        ]);
     });
 
     Route::get('register/verify/{confirmation_code}', [
